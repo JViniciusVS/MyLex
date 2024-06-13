@@ -147,30 +147,30 @@
             </thead>
             <tbody id="clientTable">
                 <tr>
-                    <td>João Silva</td>
-                    <td>joao.silva@example.com</td>
-                    <td>(87) 3031-6224</td>
-                    <td>av Test, T</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                     <td>
                         <button class="btn btn-warning btn-sm">Editar</button>
                         <button class="btn btn-danger btn-sm">Excluir</button>
                     </td>
                 </tr>
                 <tr>
-                    <td>Maria Oliveira</td>
-                    <td>maria.oliveira@example.com</td>
-                    <td>(87) 3031-6224</td>
-                    <td>av Test, T</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                     <td>
                         <button class="btn btn-warning btn-sm">Editar</button>
                         <button class="btn btn-danger btn-sm">Excluir</button>
                     </td>
                 </tr>
                 <tr>
-                    <td>Carlos Souza</td>
-                    <td>carlos.souza@example.com</td>
-                    <td>(87) 3031-6224</td>
-                    <td>av Test, T</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                     <td>
                         <button class="btn btn-warning btn-sm">Editar</button>
                         <button class="btn btn-danger btn-sm">Excluir</button>
@@ -247,6 +247,9 @@
             });
         }
 
+        let isEditing = false;
+        let currentClientId = null;
+
         // Função para adicionar um novo cliente
         async function addClient() {
             const clientName = document.getElementById('clientName').value;
@@ -271,12 +274,20 @@
                 loadClients();
                 document.getElementById('addClientForm').reset();
                 document.querySelector('.btn-close').click();
+                isEditing = false;
+                currentClientId = null;
+                document.getElementById('exampleModalLabel').textContent = 'Adicionar Cliente';
             }
         }
 
         // Função para editar um cliente
         async function editClient(clientId) {
-            const client = await fetch(`/api/clientes/${clientId}`).then(res => res.json());
+            isEditing = true;
+            if (clientId != null) {
+                currentClientId = clientId;
+            }
+
+            const client = await fetch(`/cliente/${currentClientId}`).then(res => res.json());
             document.getElementById('clientName').value = client.nomeCompleto;
             document.getElementById('clientEmail').value = client.email;
             document.getElementById('clientPhone').value = client.telefone || '';
@@ -287,7 +298,7 @@
                 const clientPhone = document.getElementById('clientPhone').value;
                 const clientAddress = document.getElementById('clientAddress').value;
 
-                const response = await fetch(`/api/clientes/${clientId}`, {
+                const response = await fetch(`/cliente/${clientId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
@@ -304,6 +315,9 @@
                     loadClients();
                     document.getElementById('addClientForm').reset();
                     document.querySelector('.btn-close').click();
+                    isEditing = false;
+                    currentClientId = null;
+                    document.getElementById('exampleModalLabel').textContent = 'Adicionar Cliente';
                 }
             };
             new bootstrap.Modal(document.getElementById('exampleModal')).show();
@@ -321,7 +335,13 @@
             }
         }
 
-        document.getElementById('saveClientButton').addEventListener('click', addClient);
+        document.getElementById('saveClientButton').addEventListener('click', () => {
+            if (isEditing) {
+                editClient();
+            } else {
+                addClient();    
+            }
+        });
 
         // Carregar os clientes ao iniciar a página
         window.onload = loadClients;
