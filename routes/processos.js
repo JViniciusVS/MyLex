@@ -1,0 +1,67 @@
+const express = require('express');
+const router = express.Router();
+const Processo = require('../models/processo');
+
+// Rota para obter todos os processos
+router.get('/', async (req, res) => {
+    try {
+        const processos = await Processo.find();
+        return res.send(processos);
+    } catch (error) {
+        return res.status(500).send({ error: 'Erro ao buscar processos' });
+    }
+});
+
+// Rota para obter um processo por ID
+router.get('/:id', async (req, res) => {
+    try {
+        const processo = await Processo.findById(req.params.id);
+        if (!processo) {
+            return res.status(404).send({ error: 'Processo não encontrado' });
+        }
+        return res.send(processo);
+    } catch (error) {
+        return res.status(500).send({ error: 'Erro ao buscar processo' });
+    }
+});
+
+// Rota para criar um novo processo
+router.post('/', async (req, res) => {
+    try {
+        const { arquivo, categoria, status, cliente } = req.body;
+        const processo = new Processo({ arquivo, categoria, status, cliente });
+        await processo.save();
+        return res.send(processo);
+    } catch (error) {
+        return res.status(500).send({ error: 'Erro ao criar processo' });
+    }
+});
+
+// Rota para atualizar um processo por ID
+router.put('/:id', async (req, res) => {
+    try {
+        const { arquivo, categoria, status, cliente } = req.body;
+        const processo = await Processo.findByIdAndUpdate(req.params.id, { arquivo, categoria, status, cliente }, { new: true });
+        if (!processo) {
+            return res.status(404).send({ error: 'Processo não encontrado' });
+        }
+        return res.send(processo);
+    } catch (error) {
+        return res.status(500).send({ error: 'Erro ao atualizar processo' });
+    }
+});
+
+// Rota para deletar um processo por ID
+router.delete('/:id', async (req, res) => {
+    try {
+        const processo = await Processo.findByIdAndDelete(req.params.id);
+        if (!processo) {
+            return res.status(404).send({ error: 'Processo não encontrado' });
+        }
+        return res.send(processo);
+    } catch (error) {
+        return res.status(500).send({ error: 'Erro ao deletar processo' });
+    }
+});
+
+module.exports = router;

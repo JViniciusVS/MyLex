@@ -17,6 +17,7 @@ const advogadoRoutes = require("./routes/advogado");
 const clienteRoutes = require('./routes/cliente');
 const homepageRoutes = require("./routes/homepage");
 const calendarRoutes = require("./routes/calendar");
+const processoRouter = require('./routes/processos');
 
 // Config Import
 const config = require("./config");
@@ -39,6 +40,7 @@ mongoose
 app.use("/", advogadoRoutes);
 app.use("/cliente", clienteRoutes);
 app.use(homepageRoutes);
+app.use('/processos', processoRouter);
 
 // Rota para lidar com upload de arquivos
 app.post("/upload", upload.single("file"), (req, res) => {
