@@ -145,10 +145,10 @@
             </thead>
             <tbody id="processTable">
                 <tr>
-                    <td>Arquivo aqui</td>
-                    <td>Violência Doméstica</td>
-                    <td>Em andamento</td>
-                    <td>Maria Oliveira</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                     <td>
                         <button class="btn btn-warning btn-sm">Editar</button>
                         <button class="btn btn-danger btn-sm">Excluir</button>
@@ -258,7 +258,7 @@
 
         // Função para editar um processo
         async function editProcess(processId) {
-            const process = await fetch(`/api/processos/${processId}`).then(res => res.json());
+            const process = await fetch(`/processos/${processId}`).then(res => res.json());
             document.getElementById('processFile').value = process.arquivo;
             document.getElementById('processCategory').value = process.categoria;
             document.getElementById('processStatus').value = process.status;
@@ -275,7 +275,7 @@
             const processStatus = document.getElementById('processStatus').value;
             const processClient = document.getElementById('processClient').value;
 
-            const response = await fetch(`/api/processos/${processId}`, {
+            const response = await fetch(`/processos/${processId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -297,7 +297,7 @@
 
         // Função para excluir um processo
         async function deleteProcess(processId) {
-            const response = await fetch(`/api/processos/${processId}`, {
+            const response = await fetch(`/processos/${processId}`, {
                 method: 'DELETE'
             });
 
