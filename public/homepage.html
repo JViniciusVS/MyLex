@@ -40,6 +40,11 @@
       /* Alinhamento vertical */
     }
 
+    .navbar .logo {
+      color: #e7d49e;
+      font-size: 24px;
+  }
+
     .mx-5 a {
       color: #e7d49e;
       text-decoration: none;
@@ -107,18 +112,16 @@
 <body class="bg-secondary-subtle">
   <nav class="navbar">
     <div class="container-fluid">
-      <a class="navbar-brand logo ms-4">
-        <img class="logo" style="color: #e7d49e" src="img/Mylex.png" alt="Logo" class="img" />
-        <!-- Imagem ajustada -->
-      </a>
+      <a class="logo ms-4 navbar-brand" href="homepage.html">MyLex</a>
       <div class="mx-5">
-        <a class="p-2" style="color: #e7d49e" href="calendar.html">Agenda</a>
+        <a class="p-2" style="color: #e7d49e" href="vanillacalendar.html">Agenda</a>
         <a class="p-2" style="color: #e7d49e" href="cliente.html">Clientes</a>
+        <a class="p-2" style="color: #e7d49e" href="processos.html">Processos</a>
       </div>
     </div>
   </nav>
 
-  <h4 class="mx-5 mt-3 mb-0"><strong>Suas audiências de neste no próximo mês</strong></h4>
+  <h4 class="mx-5 mt-3 mb-0"><strong>Seus processos da semana</strong></h4>
 
   <hr />
 
@@ -127,72 +130,41 @@
   </div>
 
   <div id="cards" class="container">
-    <p class="m-3">Neste mês</p>
-    <div class="row">
-      <!-- Primeiro conjunto de 3 cartões -->
-      <div class="col-md-4">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Audiêcia de Conciliação 07/06</h5>
-            <p class="card-text">Conciliação conjugal às 15:00hrs</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Tutela de Urgência 15/07</h5>
-            <p class="card-text">Audiência às 16:30.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Pensão Alimenticía 25/07</h5>
-            <p class="card-text">Audiência àS 08:00hrs.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <!-- Segundo conjunto de 3 cartões -->
-      <p class="m-3">Próximo Mês</p>
-      <div class="col-md-4">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Pensão Alimenticía 08/08</h5>
-            <p class="card-text">Audiência às 15:00hrs</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Tutela de Urgência 15/08</h5>
-            <p class="card-text">Audiêcia às 16:30.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Tutela de Urgência 30/08</h5>
-            <p class="card-text">Audiência às 14:45.</p>
-          </div>
-        </div>
-      </div>
+    <p class="m-3">Processos</p>
+    <div class="row" id="processCards">
+      <!-- Cards serão inseridos dinamicamente aqui -->
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <script>
+    // Função para carregar os processos
+    async function loadProcesses() {
+      const response = await fetch('http://localhost:3000/processos/');
+      const processes = await response.json();
+      const processCards = document.getElementById('processCards');
+      processCards.innerHTML = '';
+
+      processes.forEach(process => {
+        const card = document.createElement('div');
+        card.className = 'col-md-4';
+        card.innerHTML = `
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Processo: ${process.categoria}</h5>
+              <p class="card-text">Status: ${process.status}</p>
+              <p class="card-text">Notas: ${process.notas}</p>
+            </div>
+          </div>
+        `;
+        processCards.appendChild(card);
+      });
+    }
+
+    // Chama a função para carregar os processos quando a página é carregada
+    window.onload = loadProcesses;
+
     // Defina o objeto de dados e a configuração antes de criar o gráfico
     const data = {
       labels: ["Red", "Blue", "Yellow"],

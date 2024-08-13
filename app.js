@@ -9,6 +9,9 @@ const path = require("path");
 // Servir arquivos estáticos do diretório "public"
 app.use(express.static(path.join(__dirname, "public")));
 
+// Servir arquivos estáticos do diretório "uploads"
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 // Upload Config Import
 const upload = require("./utils/uploadConfig");
 
@@ -41,6 +44,7 @@ app.use("/", advogadoRoutes);
 app.use("/cliente", clienteRoutes);
 app.use(homepageRoutes);
 app.use('/processos', processoRouter);
+app.use("/calendar", calendarRoutes);
 
 // Rota para lidar com upload de arquivos
 app.post("/upload", upload.single("file"), (req, res) => {

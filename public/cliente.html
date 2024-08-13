@@ -119,9 +119,9 @@
 <body class="bg-secondary-subtle">
     <nav class="navbar">
         <div class="container-fluid">
-            <a class="logo ms-4 navbar-brand">MyLex</a>
+            <a class="logo ms-4 navbar-brand" href="homepage.html">MyLex</a>
             <div class="mx-5">
-                <a class="p-2" style="color: #e7d49e" href="#">Agenda</a>
+                <a class="p-2" style="color: #e7d49e" href="vanillacalendar.html">Agenda</a>
                 <a class="p-2" style="color: #e7d49e" href="processos.html">Processos</a>
             </div>
         </div>
@@ -141,21 +141,11 @@
                     <th>Nome</th>
                     <th>Email</th>
                     <th>Telefone</th>
-                    <th>Endereço</th>
+                    <th>Processo</th>
                     <th>Ações</th>
                 </tr>
             </thead>
             <tbody id="clientTable">
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        <button class="btn btn-warning btn-sm">Editar</button>
-                        <button class="btn btn-danger btn-sm">Excluir</button>
-                    </td>
-                </tr>
                 <tr>
                     <td></td>
                     <td></td>
@@ -203,8 +193,8 @@
                             <input type="text" class="form-control" id="clientPhone" required>
                         </div>
                         <div class="mb-3">
-                            <label for="clientAddress" class="form-label">Processo</label>
-                            <input type="text" class="form-control" id="clientAddress" required>
+                            <label for="clientProcess" class="form-label">Processo</label>
+                            <input type="text" class="form-control" id="clientProcess" required>
                         </div>
                     </form>
                 </div>
@@ -237,7 +227,7 @@
                     <td>${client.nomeCompleto}</td>
                     <td>${client.email}</td>
                     <td>${client.telefone || ''}</td>
-                    <td>${client.endereco || ''}</td>
+                    <td>${client.processo || ''}</td>
                     <td>
                         <button class="btn btn-warning btn-sm" onclick="editClient('${client._id}')">Editar</button>
                         <button class="btn btn-danger btn-sm" onclick="deleteClient('${client._id}')">Excluir</button>
@@ -255,7 +245,7 @@
             const clientName = document.getElementById('clientName').value;
             const clientEmail = document.getElementById('clientEmail').value;
             const clientPhone = document.getElementById('clientPhone').value;
-            const clientAddress = document.getElementById('clientAddress').value;
+            const clientProcess = document.getElementById('clientProcess').value;
 
             const response = await fetch('http://localhost:3000/cliente/', {
                 method: 'POST',
@@ -266,7 +256,7 @@
                     nomeCompleto: clientName,
                     email: clientEmail,
                     telefone: clientPhone,
-                    endereco: clientAddress
+                    processo: clientProcess
                 })
             });
 
@@ -287,18 +277,18 @@
                 currentClientId = clientId;
             }
 
-            const client = await fetch(`/cliente/${currentClientId}`).then(res => res.json());
+            const client = await fetch(`http://localhost:3000/cliente/${currentClientId}`).then(res => res.json());
             document.getElementById('clientName').value = client.nomeCompleto;
             document.getElementById('clientEmail').value = client.email;
             document.getElementById('clientPhone').value = client.telefone || '';
-            document.getElementById('clientAddress').value = client.endereco || '';
+            document.getElementById('clientProcess').value = client.processo || '';
             document.getElementById('saveClientButton').onclick = async function () {
                 const clientName = document.getElementById('clientName').value;
                 const clientEmail = document.getElementById('clientEmail').value;
                 const clientPhone = document.getElementById('clientPhone').value;
-                const clientAddress = document.getElementById('clientAddress').value;
+                const clientProcess = document.getElementById('clientProcess').value;
 
-                const response = await fetch(`/cliente/${clientId}`, {
+                const response = await fetch(`http://localhost:3000/cliente/${clientId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
@@ -307,7 +297,7 @@
                         nomeCompleto: clientName,
                         email: clientEmail,
                         telefone: clientPhone,
-                        endereco: clientAddress
+                        processo: clientProcess
                     })
                 });
 

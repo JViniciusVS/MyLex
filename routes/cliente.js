@@ -20,16 +20,16 @@ router.get('/:id', async (req, res) => {
 // Rota para criar um novo cliente
 router.post('/', async (req, res) => {
     console.log('chamou')
-    const { nomeCompleto, email, senha, cpf } = req.body;
-    const cliente = new Cliente({ nomeCompleto, email, senha, cpf });
+    const { nomeCompleto, email, telefone, processo } = req.body;
+    const cliente = new Cliente({ nomeCompleto, email, telefone, processo });
     await cliente.save();
     return res.send(cliente);
 });
 
 // Rota para atualizar um cliente por ID
 router.put('/:id', async (req, res) => {
-    const { nomeCompleto, email, senha, cpf } = req.body;
-    const cliente = await Cliente.findByIdAndUpdate(req.params.id, { nomeCompleto, email, senha, cpf }, { new: true });
+    const { nomeCompleto, email, telefone, processo } = req.body;
+    const cliente = await Cliente.findByIdAndUpdate(req.params.id, { nomeCompleto, email, telefone, processo }, { new: true });
     if (!cliente) {
         return res.status(404).send({ error: 'Cliente não encontrado' });
     }
