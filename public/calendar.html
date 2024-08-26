@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang='pt'>
+
+<head>
+    <meta charset='utf-8' />
+    <title>Exemplo de FullCalendar</title>
+    <style>
+        /* Adicionei o CSS abaixo */
+        #create-event {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        /* Fim do CSS adicionado */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        nav {
+            width: 100%;
+            height: 100px;
+            background-color: #020620;
+        }
+
+        .logo {
+            margin: 1.5em;
+        }
+
+        .logo:hover {
+            transition: all 200ms ease-in;
+            transform: scale(0.9);
+            transform: scale(1.1);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mx-5 a {
+            color: #e7d49e;
+            text-decoration: none;
+            position: relative;
+        }
+
+        .mx-5 a::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: -2px;
+            height: 2px;
+            width: 0;
+            background: #e7d49e;
+            transform: translateX(-50%);
+            transition: width 0.4s ease-in-out;
+        }
+
+        .mx-5 a:hover::after {
+            width: 100%;
+        }
+
+        .logo {
+            padding: 0;
+            margin: 0;
+        }
+
+        .logo img {
+            max-height: 110px;
+            width: auto;
+        }
+
+        #calendar-container {
+            flex: 1;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #calendar {
+            width: 90%;
+            height: 80vh;
+        }
+
+        #create-event {
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #create-event:hover {
+            background-color: #0056b3;
+        }
+
+        #logo {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 150px;
+            /* Adjust the width as needed */
+        }
+
+    </style>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.14/index.global.min.js'></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const useScheduler = urlParams.get('scheduler') === 'true';
+
+            var calendarEl = document.getElementById('calendar');
+            var calendarOptions = {
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+                },
+                buttonText: {
+                    today: 'Hoje',
+                    month: 'Mês',
+                    week: 'Semana',
+                    day: 'Dia',
+                    list: 'Lista'
+                },
+                locale: 'pt-br',
+                events: '/api/events',
+                editable: true,
+                selectable: true,
+                select: function (info) {
+                    var title = prompt('Digite o título do evento:');
+                    if (title) {
+                        fetch('/api/events', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                title: title,
+                                start: info.start,
+                                end: info.end,
+                                allDay: info.allDay
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(event => {
+                            calendar.addEvent(event);
+                        });
+                    }
+                    calendar.unselect();
+                },
+                eventClick: function (info) {
+                    var deleteMsg = confirm('Você realmente deseja excluir este evento?');
+                    if (deleteMsg) {
+                        fetch(`/api/events/${info.event.id}`, {
+                            method: 'DELETE'
+                        })
+                        .then(() => {
+                            info.event.remove();
+                        });
+                    }
+                }
+            };
+
+            if (useScheduler) {
+                calendarOptions.initialView = 'resourceTimelineWeek';
+            }
+
+            var calendar = new FullCalendar.Calendar(calendarEl, calendarOptions);
+            calendar.render();
+
+            document.getElementById('create-event').addEventListener('click', function () {
+                var title = prompt('Digite o título da audiência:');
+                var dateStr = prompt('Digite a data da audiência (YYYY-MM-DD):');
+                var timeStr = prompt('Digite a hora da audiência (HH:MM):');
+                var dateTimeStr = dateStr + 'T' + timeStr + ':00';
+                var date = new Date(dateTimeStr);
+                if (!isNaN(date.valueOf())) {
+                    fetch('/api/events', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            title: title,
+                            start: date,
+                            allDay: false
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(event => {
+                        calendar.addEvent(event);
+                        alert('Audiência criada com sucesso!');
+                    });
+                } else {
+                    alert('Data ou hora inválida.');
+                }
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container-fluid">
+            <a class="navbar-brand logo ms-4">
+                <img class="logo" style="color: #e7d49e" src="img/Mylex.png" alt="Logo" class="img" />
+            </a>
+        </div>
+    </nav>
+
+    <!-- Mudei o local do botão para o lado direito superior -->
+    <button id="create-event">Criar Audiência</button>
+    <div id="calendar-container">
+        <div id='calendar'></div>
+    </div>
+</body>
+
+</html>
