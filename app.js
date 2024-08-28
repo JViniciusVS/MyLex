@@ -16,7 +16,6 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 const upload = require("./utils/uploadConfig");
 
 // Route Imports
-const loginRoutes = require("./routes/login");
 const advogadoRoutes = require("./routes/advogado");
 const clienteRoutes = require('./routes/cliente');
 const homepageRoutes = require("./routes/homepage");
@@ -41,7 +40,6 @@ mongoose
   .catch((err) => console.log("Error connecting to MongoDB Atlas:", err));
 
 // Use Routes
-app.use("/login", loginRoutes);
 app.use("/", advogadoRoutes);
 app.use("/cliente", clienteRoutes);
 app.use(homepageRoutes);

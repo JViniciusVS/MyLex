@@ -37,7 +37,7 @@ router.post("/register", async (req, res) => {
 });
 
 // Rota de Login
-router.post("/login2", async (req, res) => {
+router.post("/login", async (req, res) => {
   try {
     const { emailCorporativo, senha } = req.body;
     const advogado = await Advogado.findOne({ emailCorporativo });
@@ -117,3 +117,5 @@ router.put("/update/:id", verifyToken, async (req, res) => {
     res.status(500).send(err.message);
   }
 });
+
+module.exports = router;
