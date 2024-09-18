@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'login_screen.dart';
 import 'homepage_screen.dart';
 import 'clientes_screen.dart';
-
+import 'agenda_screen.dart';
 
 void main() {
   runApp(MyLexApp());
@@ -21,6 +21,7 @@ class MyLexApp extends StatelessWidget {
         '/login': (context) => LoginScreen(),
         '/homepage': (context) => HomePageScreen(),
         '/clientes': (context) => ClientesScreen(),
+        '/agenda': (context) => AgendaScreen(),
       },
     );
   }
