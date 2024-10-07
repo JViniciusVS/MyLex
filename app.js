@@ -21,6 +21,7 @@ const clienteRoutes = require('./routes/cliente');
 const homepageRoutes = require("./routes/homepage");
 const calendarRoutes = require("./routes/calendar");
 const processoRouter = require('./routes/processos');
+const loginRoutes = require('./routes/login');
 
 // Config Import
 const config = require("./config");
@@ -45,6 +46,7 @@ app.use("/cliente", clienteRoutes);
 app.use(homepageRoutes);
 app.use('/processos', processoRouter);
 app.use("/calendar", calendarRoutes);
+app.use("/login", loginRoutes);
 
 // Rota para lidar com upload de arquivos
 app.post("/upload", upload.single("file"), (req, res) => {

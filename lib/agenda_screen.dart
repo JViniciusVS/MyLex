@@ -1,21 +1,30 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
 
 import 'constantes_arbitraries.dart';
 
+=======
+import 'package:intl/intl.dart';
+
+>>>>>>> main
 class AgendaScreen extends StatefulWidget {
   @override
   _AgendaScreenState createState() => _AgendaScreenState();
 }
 
 class _AgendaScreenState extends State<AgendaScreen> {
+<<<<<<< HEAD
   // Variáveis para o calendário
+=======
+>>>>>>> main
   DateTime _selectedDate = DateTime.now();
   int _currentDay = DateTime.now().day;
   int _currentMonth = DateTime.now().month;
   int _currentYear = DateTime.now().year;
+<<<<<<< HEAD
   List<dynamic> _events = [];
 
   // Função para buscar eventos da API
@@ -39,6 +48,9 @@ class _AgendaScreenState extends State<AgendaScreen> {
     _fetchEvents();
   }
 
+=======
+  
+>>>>>>> main
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,7 +74,10 @@ class _AgendaScreenState extends State<AgendaScreen> {
                         _currentMonth = 12;
                         _currentYear--;
                       }
+<<<<<<< HEAD
                       _fetchEvents();
+=======
+>>>>>>> main
                     });
                   },
                 ),
@@ -79,7 +94,10 @@ class _AgendaScreenState extends State<AgendaScreen> {
                         _currentMonth = 1;
                         _currentYear++;
                       }
+<<<<<<< HEAD
                       _fetchEvents();
+=======
+>>>>>>> main
                     });
                   },
                 ),
@@ -93,12 +111,15 @@ class _AgendaScreenState extends State<AgendaScreen> {
               currentDay: _currentDay,
               currentMonth: _currentMonth,
               currentYear: _currentYear,
+<<<<<<< HEAD
               events: _events,
               onDateSelected: (date) {
                 setState(() {
                   _selectedDate = date;
                 });
               },
+=======
+>>>>>>> main
             ),
           ),
         ],
@@ -112,8 +133,11 @@ class CalendarGridView extends StatelessWidget {
   final int currentDay;
   final int currentMonth;
   final int currentYear;
+<<<<<<< HEAD
   final List<dynamic> events;
   final Function(DateTime) onDateSelected;
+=======
+>>>>>>> main
 
   const CalendarGridView({
     Key? key,
@@ -121,8 +145,11 @@ class CalendarGridView extends StatelessWidget {
     required this.currentDay,
     required this.currentMonth,
     required this.currentYear,
+<<<<<<< HEAD
     required this.events,
     required this.onDateSelected,
+=======
+>>>>>>> main
   }) : super(key: key);
 
   @override
@@ -130,14 +157,18 @@ class CalendarGridView extends StatelessWidget {
     final firstDayOfMonth = DateTime(currentYear, currentMonth);
     final firstDayOfMonthWeekday = firstDayOfMonth.weekday;
     final daysInMonth = DateTime(currentYear, currentMonth + 1, 0).day;
+<<<<<<< HEAD
     final _formKey = GlobalKey<FormState>();
     String? newEventTitle;
+=======
+>>>>>>> main
 
     return GridView.count(
       crossAxisCount: 7,
       children: List.generate(42, (index) {
         final day = index - firstDayOfMonthWeekday + 1;
         if (day > 0 && day <= daysInMonth) {
+<<<<<<< HEAD
           final formattedDate = DateTime(currentYear, currentMonth, day).toString().substring(0, 10);
           final eventsForDay = events.where((event) => event['date'].toString().substring(0, 10) == formattedDate).toList();
 
@@ -288,6 +319,11 @@ class CalendarGridView extends StatelessWidget {
               decoration: BoxDecoration(
                 border: selectedDate == DateTime(currentYear, currentMonth, day) ? Border.all(color: Colors.blue) : null,
               ),
+=======
+          return GestureDetector(
+            onTap: () {},
+            child: Container(
+>>>>>>> main
               padding: EdgeInsets.all(8.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -299,6 +335,7 @@ class CalendarGridView extends StatelessWidget {
                       fontWeight: selectedDate == DateTime(currentYear, currentMonth, day) ? FontWeight.bold : FontWeight.normal,
                     ),
                   ),
+<<<<<<< HEAD
                   if (eventsForDay.isNotEmpty)
                     Container(
                       width: 8.0,
@@ -308,6 +345,8 @@ class CalendarGridView extends StatelessWidget {
                         shape: BoxShape.circle,
                       ),
                     ),
+=======
+>>>>>>> main
                 ],
               ),
             ),
@@ -319,6 +358,7 @@ class CalendarGridView extends StatelessWidget {
     );
   }
 }
+<<<<<<< HEAD
 
 // Função para enviar o novo evento para a API
 Future<void> _createEvent(DateTime date, String title) async {
@@ -366,3 +406,5 @@ Future<void> _deleteEvent(String eventId) async {
     print('Erro ao excluir evento: ${response.statusCode}');
   }
 }
+=======
+>>>>>>> main

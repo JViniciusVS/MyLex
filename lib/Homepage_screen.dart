@@ -3,6 +3,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'constantes_arbitraries.dart';
+import 'login_screen.dart';
 
 class HomePageScreen extends StatefulWidget {
   @override
@@ -60,6 +61,20 @@ class _HomePageScreenState extends State<HomePageScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('MyLex'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.person_add),
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, '/cadastro'); // Tela de cadastro de usuários
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.exit_to_app),
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, '/login'); // Retorna para a tela de login
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -84,6 +99,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_today),
@@ -98,6 +114,9 @@ class _HomePageScreenState extends State<HomePageScreen> {
             label: 'Processos',
           ),
         ],
+        selectedItemColor: Color(0xFFE7D49E),
+        unselectedItemColor: Color(0xFFE7D49E),
+        backgroundColor: Colors.black,
         onTap: (index) {
           if (index == 0) {
             Navigator.pushNamed(context, '/agenda');
