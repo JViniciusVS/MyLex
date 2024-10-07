@@ -35,17 +35,61 @@ class _CadastroScreenState extends State<CadastroScreen> {
 
   // Função para adicionar um novo usuário
   Future<void> _addUsuario(String user, String password) async {
-    // Código para adicionar usuário
+
+    final response = await http.post(
+      Uri.parse('$LINK_BASE/login/'),
+      body: jsonEncode({
+        'user': user,
+        'password': password,
+      }),
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200) {
+      _loadUsuarios();
+      _formKey.currentState?.reset();
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Usuário adicionado com sucesso!')),
+      );
+    } else {
+      print('Erro ao adicionar usuário: ${response.statusCode}');
+    }
   }
 
   // Função para editar um usuário
   Future<void> _editUsuario(String userId, String user, String password) async {
-    // Código para editar usuário
+
+    final response = await http.put(
+      Uri.parse('$LINK_BASE/login/$userId'),
+      body: jsonEncode({
+        'user': user,
+        'password': password,
+      }),
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200) {
+      _loadUsuarios();
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Usuário editado com sucesso!')),
+      );
+    } else {
+      print('Erro ao editar usuário: ${response.statusCode}');
+    }
   }
 
-  // Função para deletar um usuário
   Future<void> _deleteUsuario(String userId) async {
-    // Código para deletar usuário
+    
+    final response = await http.delete(Uri.parse('$LINK_BASE/login/$userId'));
+    if (response.statusCode == 200) {
+      _loadUsuarios();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Usuário removido com sucesso!')),
+      );
+    } else {
+      // Tratar erros de requisição
+      print('Erro ao excluir usuário: ${response.statusCode}');
+    }
   }
 
   // Modal para adicionar ou editar usuários
@@ -81,7 +125,7 @@ class _CadastroScreenState extends State<CadastroScreen> {
                     TextFormField(
                       controller: _passwordController,
                       decoration: InputDecoration(labelText: 'Senha'),
-                      obscureText: true,
+                      obscureText: true, // Para ocultar a senha
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Por favor, insira a senha';
@@ -124,54 +168,60 @@ class _CadastroScreenState extends State<CadastroScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Cadastro de Usuários'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, '/homepage');
+          },
+        ),
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      _showUsuarioModal();
-                    },
-                    child: Text('Adicionar Usuário'),
-                  ),
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: usuarios.length,
-                    itemBuilder: (context, index) {
-                      final usuario = usuarios[index];
-                      return ListTile(
-                        title: Text(usuario['user']),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                _showUsuarioModal(
-                                  usuario['_id'],
-                                  usuario['user'],
-                                  usuario['password'],
-                                );
-                              },
-                              icon: Icon(Icons.edit),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                _deleteUsuario(usuario['_id']);
-                              },
-                              icon: Icon(Icons.delete),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ElevatedButton(
+              onPressed: () {
+                _showUsuarioModal();
+              },
+              child: Text('Adicionar Usuário'),
             ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: usuarios.length,
+              itemBuilder: (context, index) {
+                final usuario = usuarios[index];
+                return ListTile(
+                  title: Text(usuario['user']),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          _showUsuarioModal(
+                            usuario['_id'],
+                            usuario['user'],
+                            usuario['password'],
+                          );
+                        },
+                        icon: Icon(Icons.edit),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          _deleteUsuario(usuario['_id']);
+                        },
+                        icon: Icon(Icons.delete),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
