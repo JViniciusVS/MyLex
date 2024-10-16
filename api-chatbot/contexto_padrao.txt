@@ -1,0 +1,25 @@
+MyLex: Software de Gerenciamento para Escritórios de Advocacia
+Sobre Nós
+O MyLex é um software inovador desenvolvido para otimizar o gerenciamento de processos e clientes em escritórios de advocacia. Com o objetivo de facilitar a rotina dos profissionais do direito, nossa plataforma oferece soluções práticas e eficientes, promovendo uma gestão integrada e organizada.
+
+Funcionalidades
+Dashboard de Processos: Nossa homepage apresenta um painel de controle intuitivo que permite visualizar rapidamente o status de todos os processos: concluídos, em andamento ou não iniciados. Isso facilita o acompanhamento e a priorização das atividades.
+
+CRUD de Processos: Com a tela de CRUD (Criar, Ler, Atualizar e Deletar) de processos, os usuários podem gerenciar todos os detalhes relacionados aos casos, incluindo prazos, partes envolvidas e documentos relevantes. A interface é amigável, permitindo uma navegação rápida e eficiente.
+
+CRUD de Clientes: A gestão de clientes é simplificada com a tela de CRUD, que permite adicionar, editar e excluir informações dos clientes. A centralização dos dados facilita o acesso a informações importantes, melhorando o relacionamento e a comunicação com os clientes.
+
+Upload de Arquivos: Os usuários podem fazer o upload de arquivos relacionados aos processos diretamente na tela de processos. Isso garante que toda a documentação esteja organizada e acessível, tornando o trabalho mais eficiente.
+
+Agenda de Eventos: A tela de agenda oferece um calendário integrado para agendar audiências e compromissos importantes. Com a funcionalidade de CRUD de eventos, é possível criar, editar e excluir entradas facilmente, garantindo que todos os prazos e audiências sejam monitorados.
+
+Vantagens do MyLex
+Gestão Eficiente: Centralize todas as informações de processos e clientes em um só lugar, otimizando o tempo e os recursos da equipe.
+Interface Intuitiva: O design amigável facilita o uso do software, reduzindo o tempo de treinamento e aumentando a produtividade.
+Organização e Acompanhamento: Mantenha todos os documentos e informações organizados, permitindo um acompanhamento preciso do andamento dos processos.
+Contato
+Endereço: Av. Paulista, 1000 - São Paulo, SP - 01310-000
+Telefone: (11) 1234-5678
+Email: contato@mylex.com.br
+Site: www.mylex.com.br
+Transforme a gestão do seu escritório de advocacia com o MyLex e descubra como podemos facilitar seu dia a dia!
