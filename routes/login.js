@@ -42,10 +42,10 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     // Obter o primeiro objeto dentro do array "login"
-    const { login: [newLogin] } = req.body;
+    const { user, password } = req.body;
 
     // Criar um novo objeto Login com os dados do objeto "newLogin"
-    const login = new Login({ user: newLogin.user, password: newLogin.password });
+    const login = new Login({user, password });
 
     await login.save();
     return res.send(login); 
