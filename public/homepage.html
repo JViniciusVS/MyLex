@@ -43,7 +43,7 @@
     .navbar .logo {
       color: #e7d49e;
       font-size: 24px;
-  }
+    }
 
     .mx-5 a {
       color: #e7d49e;
@@ -146,7 +146,17 @@
       const processCards = document.getElementById('processCards');
       processCards.innerHTML = '';
 
+      const statusCount = {
+        "Concluído": 0,
+        "Em andamento": 0,
+        "Outros": 0
+      };
+
+      // Criar cards e contar status
       processes.forEach(process => {
+        // Contar os processos por status
+        statusCount[process.status] = (statusCount[process.status] || 0) + 1;
+
         const card = document.createElement('div');
         card.className = 'col-md-4';
         card.innerHTML = `
@@ -160,37 +170,46 @@
         `;
         processCards.appendChild(card);
       });
+
+      // Atualiza o gráfico com os dados dos processos
+      updateChart(statusCount);
+    }
+
+    // Função para atualizar o gráfico
+    function updateChart(statusCount) {
+      const data = {
+        labels: ["Concluído", "Em andamento", "Outros"],
+        datasets: [
+          {
+            label: "Status dos Processos",
+            data: [
+              statusCount["Concluído"] || 0,
+              statusCount["Em andamento"] || 0,
+              statusCount["Outros"] || 0
+            ],
+            backgroundColor: [
+              "rgb(34, 139, 34)",  // Concluído - verde
+              "rgb(255, 159, 64)",  // Em andamento - laranja
+              "rgb(201, 203, 207)"  // Outros - cinza
+            ],
+            hoverOffset: 4
+          }
+        ]
+      };
+
+      const config = {
+        type: 'pie',
+        data: data
+      };
+
+      const myChart = new Chart(
+        document.getElementById('myChart'),
+        config
+      );
     }
 
     // Chama a função para carregar os processos quando a página é carregada
     window.onload = loadProcesses;
-
-    // Defina o objeto de dados e a configuração antes de criar o gráfico
-    const data = {
-      labels: ["Red", "Blue", "Yellow"],
-      datasets: [
-        {
-          label: "My First Dataset",
-          data: [300, 50, 100],
-          backgroundColor: [
-            "rgb(255, 99, 132)",
-            "rgb(54, 162, 235)",
-            "rgb(255, 205, 86)",
-          ],
-          hoverOffset: 4,
-        },
-      ],
-    };
-
-    const config = {
-      type: "pie",
-      data: data,
-    };
-
-    const myChart = new Chart(
-      document.getElementById("myChart"), // ID do canvas
-      config
-    );
   </script>
 </body>
 
