@@ -106,6 +106,10 @@
       margin: 0;
       /* Mantém a imagem sem margens */
     }
+
+    #eventos {
+      margin-top: 30px;
+    }
   </style>
 </head>
 
@@ -134,6 +138,14 @@
     <div class="row" id="processCards">
       <!-- Cards serão inseridos dinamicamente aqui -->
     </div>
+  </div>
+
+  <div id="eventos" class="container">
+    <h4 class="m-3"><strong>Eventos de Hoje</strong></h4>
+    <div id="eventCards" class="row">
+      <!-- Eventos serão inseridos dinamicamente aqui -->
+    </div>
+    <div id="noEventsMessage" class="m-3" style="display: none;">Sem eventos hoje</div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -208,8 +220,44 @@
       );
     }
 
-    // Chama a função para carregar os processos quando a página é carregada
-    window.onload = loadProcesses;
+    // Função para carregar eventos de hoje
+    async function loadEvents() {
+      const response = await fetch('http://localhost:3000/calendar/');
+      const events = await response.json();
+      const eventCards = document.getElementById('eventCards');
+      eventCards.innerHTML = '';
+
+      const today = new Date().toISOString().split('T')[0]; // Formato YYYY-MM-DD
+      const todayEvents = events.filter(event => {
+        const eventDate = new Date(event.date).toISOString().split('T')[0];
+        return eventDate === today;
+      });
+
+      if (todayEvents.length > 0) {
+        todayEvents.forEach(event => {
+          const card = document.createElement('div');
+          card.className = 'col-md-12';
+          card.innerHTML = `
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Evento: ${event.title}</h5>
+                <p class="card-text">Data: ${new Date(event.date).toLocaleDateString()}</p>
+              </div>
+            </div>
+          `;
+          eventCards.appendChild(card);
+        });
+        document.getElementById('noEventsMessage').style.display = 'none'; // Esconder mensagem de "sem eventos"
+      } else {
+        document.getElementById('noEventsMessage').style.display = 'block'; // Mostrar mensagem de "sem eventos"
+      }
+    }
+
+    // Chama as funções para carregar os processos e eventos quando a página é carregada
+    window.onload = () => {
+      loadProcesses();
+      loadEvents();
+    };
   </script>
 </body>
 
