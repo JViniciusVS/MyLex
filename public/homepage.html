@@ -43,7 +43,7 @@
     .navbar .logo {
       color: #e7d49e;
       font-size: 24px;
-  }
+    }
 
     .mx-5 a {
       color: #e7d49e;
@@ -106,6 +106,10 @@
       margin: 0;
       /* Mantém a imagem sem margens */
     }
+
+    #eventos {
+      margin-top: 30px;
+    }
   </style>
 </head>
 
@@ -136,6 +140,14 @@
     </div>
   </div>
 
+  <div id="eventos" class="container">
+    <h4 class="m-3"><strong>Eventos de Hoje</strong></h4>
+    <div id="eventCards" class="row">
+      <!-- Eventos serão inseridos dinamicamente aqui -->
+    </div>
+    <div id="noEventsMessage" class="m-3" style="display: none;">Sem eventos hoje</div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <script>
@@ -146,7 +158,17 @@
       const processCards = document.getElementById('processCards');
       processCards.innerHTML = '';
 
+      const statusCount = {
+        "Concluído": 0,
+        "Em andamento": 0,
+        "Outros": 0
+      };
+
+      // Criar cards e contar status
       processes.forEach(process => {
+        // Contar os processos por status
+        statusCount[process.status] = (statusCount[process.status] || 0) + 1;
+
         const card = document.createElement('div');
         card.className = 'col-md-4';
         card.innerHTML = `
@@ -160,37 +182,82 @@
         `;
         processCards.appendChild(card);
       });
+
+      // Atualiza o gráfico com os dados dos processos
+      updateChart(statusCount);
     }
 
-    // Chama a função para carregar os processos quando a página é carregada
-    window.onload = loadProcesses;
+    // Função para atualizar o gráfico
+    function updateChart(statusCount) {
+      const data = {
+        labels: ["Concluído", "Em andamento", "Outros"],
+        datasets: [
+          {
+            label: "Status dos Processos",
+            data: [
+              statusCount["Concluído"] || 0,
+              statusCount["Em andamento"] || 0,
+              statusCount["Outros"] || 0
+            ],
+            backgroundColor: [
+              "rgb(34, 139, 34)",  // Concluído - verde
+              "rgb(255, 159, 64)",  // Em andamento - laranja
+              "rgb(201, 203, 207)"  // Outros - cinza
+            ],
+            hoverOffset: 4
+          }
+        ]
+      };
 
-    // Defina o objeto de dados e a configuração antes de criar o gráfico
-    const data = {
-      labels: ["Red", "Blue", "Yellow"],
-      datasets: [
-        {
-          label: "My First Dataset",
-          data: [300, 50, 100],
-          backgroundColor: [
-            "rgb(255, 99, 132)",
-            "rgb(54, 162, 235)",
-            "rgb(255, 205, 86)",
-          ],
-          hoverOffset: 4,
-        },
-      ],
+      const config = {
+        type: 'pie',
+        data: data
+      };
+
+      const myChart = new Chart(
+        document.getElementById('myChart'),
+        config
+      );
+    }
+
+    // Função para carregar eventos de hoje
+    async function loadEvents() {
+      const response = await fetch('http://localhost:3000/calendar/');
+      const events = await response.json();
+      const eventCards = document.getElementById('eventCards');
+      eventCards.innerHTML = '';
+
+      const today = new Date().toISOString().split('T')[0]; // Formato YYYY-MM-DD
+      const todayEvents = events.filter(event => {
+        const eventDate = new Date(event.date).toISOString().split('T')[0];
+        return eventDate === today;
+      });
+
+      if (todayEvents.length > 0) {
+        todayEvents.forEach(event => {
+          const card = document.createElement('div');
+          card.className = 'col-md-12';
+          card.innerHTML = `
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Evento: ${event.title}</h5>
+                <p class="card-text">Data: ${new Date(event.date).toLocaleDateString()}</p>
+              </div>
+            </div>
+          `;
+          eventCards.appendChild(card);
+        });
+        document.getElementById('noEventsMessage').style.display = 'none'; // Esconder mensagem de "sem eventos"
+      } else {
+        document.getElementById('noEventsMessage').style.display = 'block'; // Mostrar mensagem de "sem eventos"
+      }
+    }
+
+    // Chama as funções para carregar os processos e eventos quando a página é carregada
+    window.onload = () => {
+      loadProcesses();
+      loadEvents();
     };
-
-    const config = {
-      type: "pie",
-      data: data,
-    };
-
-    const myChart = new Chart(
-      document.getElementById("myChart"), // ID do canvas
-      config
-    );
   </script>
 </body>
 
