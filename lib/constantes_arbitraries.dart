@@ -1,1 +1,1 @@
-const String LINK_BASE = 'http://10.50.112.28:3000';
+const String LINK_BASE = 'http://10.0.2.2:3000';
